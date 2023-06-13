@@ -7,10 +7,11 @@ const LS_KEY = 'feedback-form-state';
 formEl.addEventListener('input', throttle(onFormInput, 500));
 formEl.addEventListener('submit', onFormSubmit);
 
-let formData = {};
+let formData = JSON.parse(localStorage.getItem(LS_KEY)) || {};
 const { email, message } = formEl.elements;
+populateFormInput();
 
-function onFormInput(e) {
+function onFormInput() {
   formData = {
     email: email.value,
     message: message.value,
@@ -20,18 +21,14 @@ function onFormInput(e) {
 }
 
 function populateFormInput() {
-  const savedInputForm = JSON.parse(localStorage.getItem(LS_KEY));
-
-  if (savedInputForm) {
-    email.value = savedInputForm || '';
-    message.value = savedInputForm || '';
+  if (formData) {
+    email.value = formData.email || '';
+    message.value = formData.message || '';
   }
 }
-populateFormInput();
 
 function onFormSubmit(e) {
   e.preventDefault();
   e.currentTarget.reset();
   localStorage.removeItem(LS_KEY);
-  console.log(formData);
 }
